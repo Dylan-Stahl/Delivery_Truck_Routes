@@ -2,8 +2,10 @@ import csv
 from packages import Package
 from hash_table_chaining import ChainingHashTable
 
+# Change chaining hash table size based on number of packages
+package_hash = ChainingHashTable(41)
 
-package_hash = ChainingHashTable()
+
 def load_packages(fileName):
     with open(fileName, 'r') as file:
         package_reader = csv.reader(file)
@@ -16,11 +18,11 @@ def load_packages(fileName):
             package_zip = package[4]
             package_deadline = package[5]
             package_mass = package[6]
+            package_notes = package[7]
 
             # create package object
             package_obj = Package(package_id, package_address, package_city, package_state, package_zip,
-                              package_deadline, package_mass)
-            print(package)
+                                  package_deadline, package_mass, package_notes)
+            # print(package)
             # insert package into the hash table
             package_hash.insert(package_id, package_obj)
-
