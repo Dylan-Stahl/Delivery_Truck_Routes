@@ -1,5 +1,6 @@
 class Package:
-    def __init__(self, id, address, city, state, zip, deadline, mass, package_notes, status='At the hub'):
+    def __init__(self, id, address, city, state, zip, deadline, mass, package_notes, status='At the hub',
+                 number_on_truck=-1):
         self.id = id
         self.address = address
         self.city = city
@@ -9,6 +10,7 @@ class Package:
         self.mass = mass
         self.package_notes = package_notes
         self.status = status
+        self.number_on_truck = number_on_truck
 
     def get_id(self):
         return self.id
@@ -19,6 +21,6 @@ class Package:
                + ' | Status: ' + str(self.status)
 
     def str(self):
-        return 'ID: ' + str(self.id) + ', Address: ' + str(self.address) + ', Deadline: ' + str(self.deadline) \
+        return 'ID = ' + str(self.id) + ', Address: ' + str(self.address) + ', Deadline: ' + str(self.deadline) \
                + ', City: ' + str(self.city) + ', Zip Code: ' + str(self.zip) + ', Weight: ' + str(self.mass) \
                + ', Status: ' + str(self.status) + ', Notes: ' + str(self.package_notes)

@@ -30,8 +30,9 @@ class Graph:
         self.add_directed_edge(vertex_a, vertex_b, weight)
         self.add_directed_edge(vertex_b, vertex_a, weight)
 
+
 # obtain distance data from distances.csv
-# implement nearest neighbor algoritm
+# implement nearest neighbor algorithm
 
 def load_distances(fileName):
     with open(fileName, 'r') as file:
