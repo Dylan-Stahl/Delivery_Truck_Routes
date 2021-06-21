@@ -1,4 +1,4 @@
-from data_loader import load_packages
+from data_loader import load_packages, load_locations
 from data_loader import package_hash
 from truck import *
 from nearest_neighbor import Graph, Vertex, nearest_neighbor, truck_three_graph
@@ -59,3 +59,18 @@ print('Following is printing result: ')
 
 for e in closest_location.ordered_list_delivery:
     print(e)
+
+
+# loading locations test data
+truck_two_graph = load_locations(truck_two)
+print(truck_two_graph.vertex_list)
+print(truck_two_graph.truck_graph.get_vertexes())
+
+
+# nearest_neighbor_truck_three = nearest_neighbor(truck_two_graph, truck_two_graph.adj)
+# adds weighted edge between WGU and 195 W oakland Ave
+truck_two_graph.truck_graph.add_undirected_edge(truck_two_graph.vertex_list[0], truck_two_graph.vertex_list[1], 3.5)
+truck_two_graph.truck_graph.add_undirected_edge(truck_two_graph.vertex_list[1], truck_two_graph.vertex_list[2], 4.5)
+
+truck_two_nearest_neighbor = nearest_neighbor(truck_two_graph.truck_graph, truck_two_graph.vertex_list[0])
+

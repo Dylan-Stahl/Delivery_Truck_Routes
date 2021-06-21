@@ -1,6 +1,14 @@
 import csv
 from packages import Package
 from hash_table_chaining import ChainingHashTable
+from nearest_neighbor import Graph, Vertex
+
+
+class LoadLocation:
+    def __init__(self, truck_graph, vertex_list):
+        self.truck_graph = truck_graph
+        self.vertex_list = vertex_list
+
 
 # Change chaining hash table size based on number of packages
 package_hash = ChainingHashTable(41)
@@ -26,3 +34,40 @@ def load_packages(fileName):
             # print(package)
             # insert package into the hash table
             package_hash.insert(package_id, package_obj)
+
+
+def load_locations(truck):
+    truck_graph = Graph()
+
+    locations_to_visit = ['4001 South 700 East']
+    vertex_list = []
+
+    with open('CSV_files/locations.csv', 'r') as locations_file:
+        location_reader = list(csv.reader(locations_file))
+        print(location_reader)
+
+    with open('CSV_files/distances.csv', 'r') as distances_file:
+        distance_reader = list(csv.reader(distances_file))
+        print(distance_reader)
+        print()
+
+    # regardless of truck, wgu must be an address/ vertex
+
+    for package in truck.package_array:
+        i = 0
+        for address in location_reader:
+            if location_reader[i][2] == package.address:
+                # location_reader[i][1] becomes  a key in the dictionary
+                location = location_reader[i][2]
+                locations_to_visit.append(location)
+                package.visited = True
+
+            i = i + 1
+        # print(package.address)
+
+    for location in locations_to_visit:
+        location_vertex = Vertex(location)
+        vertex_list.append(location_vertex)
+        truck_graph.add_vertex(location_vertex)
+
+    return LoadLocation(truck_graph, vertex_list)

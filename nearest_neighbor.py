@@ -26,6 +26,12 @@ class Graph:
         self.adjacency_list = {}
         self.edge_weights = {}
 
+    def get_vertexes(self):
+        adjacency_list = []
+        for vertex in self.adjacency_list:
+            adjacency_list.append(vertex.label)
+        return adjacency_list
+
     def add_vertex(self, new_vertex):
         self.adjacency_list[new_vertex] = []
 
@@ -69,7 +75,7 @@ def nearest_neighbor(g, start_vertex):
     while len(unvisited_list) > 0:
         # iterator
         i = 1
-        print('Distance traveled: ' + str(distance_traveled))
+        print('Distance traveled at current vertex: ' + str(distance_traveled))
         print('Current vertex: ' + str(current_vertex))
 
         # if the list is on the last item, that item must return to wgu
@@ -79,6 +85,15 @@ def nearest_neighbor(g, start_vertex):
             closest_location = start_vertex
             order_to_visit.append(closest_location)
             current_vertex.visited == True
+            print('Current vertex moved to: ' + str(start_vertex))
+            print('Closest vertex distance: ' + str(closest_location_distance))
+            print('Total distance traveled: '+ str(distance_traveled))
+            print('Path: ')
+            for location in order_to_visit:
+                print(location)
+            print('End of Results')
+            print()
+
 
             delete_already_visited_vertex = current_vertex
             unvisited_list.remove(delete_already_visited_vertex)
@@ -86,7 +101,6 @@ def nearest_neighbor(g, start_vertex):
 
         # find all vertexes adjacent to the start vertex
         for vertex in g.adjacency_list[current_vertex]:
-            print(vertex)
             # find distance between current vertex and vertex
             if i == 1 and vertex.visited == False:
                 closest_location_distance = g.edge_weights[(current_vertex, vertex)]
@@ -104,13 +118,12 @@ def nearest_neighbor(g, start_vertex):
         delete_already_visited_vertex = current_vertex
 
         current_vertex = closest_location
-        print('Current vertex now: ' + str(current_vertex))
+        print('Current vertex moved to: ' + str(current_vertex))
 
         unvisited_list.remove(delete_already_visited_vertex)
         distance_traveled = distance_traveled + closest_location_distance
 
-        print('Closest Location: ' + str(closest_location))
-        print('Closest location distance: ' + str(closest_location_distance))
+        print('Closest vertex distance: ' + str(closest_location_distance))
         print()
     print()
 
@@ -119,18 +132,5 @@ def nearest_neighbor(g, start_vertex):
 # obtain distance data from distances.csv
 # implement nearest neighbor algorithm
 
-def load_distances(fileName):
-    with open(fileName, 'r') as file:
-        distance_reader = csv.reader(file)
 
 
-def load_locations(fileName):
-    with open(fileName, 'r') as file:
-        location_reader = csv.reader(file)
-
-        for location in location_reader:
-            location_id = int(location[0])
-            location_name = location[1]
-            location_address = location[2]
-
-            location_obj = Location(location_id, location_name, location_address)
