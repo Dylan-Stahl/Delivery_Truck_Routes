@@ -25,6 +25,7 @@ class Graph:
     def __init__(self):
         self.adjacency_list = {}
         self.edge_weights = {}
+        self.return_to_hub = False
 
     def get_vertexes(self):
         adjacency_list = []
@@ -47,7 +48,10 @@ class Graph:
 truck_three_graph = Graph()
 
 
-def nearest_neighbor(g, start_vertex):
+def nearest_neighbor(g, start_vertex, truck):
+    # what i need to change:
+    # packages that must be delivered by end of the day must be delivered first
+
     order_to_visit = []
     # Put all vertices in an unvisited queue.
     unvisited_list = []
@@ -63,11 +67,7 @@ def nearest_neighbor(g, start_vertex):
         # unvisited_queue = [vertex_1, vertex_2, ...]
 
     # new design here
-    print(len(unvisited_list))
-    for e in unvisited_list:
-        print('Unvisited list: ' + str(e))
-    print()
-
+    print('Number of locations to visit: ' + str(len(unvisited_list)))
     current_vertex = start_vertex
     order_to_visit.append(current_vertex)
 
@@ -75,28 +75,26 @@ def nearest_neighbor(g, start_vertex):
     while len(unvisited_list) > 0:
         # iterator
         i = 1
-        print('Distance traveled at current vertex: ' + str(distance_traveled))
-        print('Current vertex: ' + str(current_vertex))
 
-        # if the list is on the last item, that item must return to wgu
+        # if the list is on the last item, that item must return to wgu only if the graph for that truck says it must
         if len(unvisited_list) == 1:
-            closest_location_distance = g.edge_weights[(current_vertex, start_vertex)]
-            distance_traveled = distance_traveled + closest_location_distance
-            closest_location = start_vertex
-            order_to_visit.append(closest_location)
-            current_vertex.visited == True
-            print('Current vertex moved to: ' + str(start_vertex))
-            print('Closest vertex distance: ' + str(closest_location_distance))
-            print('Total distance traveled: '+ str(distance_traveled))
+            if g.return_to_hub == True:
+                closest_location_distance = g.edge_weights[(current_vertex, start_vertex)]
+                distance_traveled = distance_traveled + float(closest_location_distance)
+                closest_location = start_vertex
+                order_to_visit.append(closest_location)
+                current_vertex.visited == True
+
+            print('Total distance traveled: ' + str(distance_traveled))
             print('Path: ')
             for location in order_to_visit:
                 print(location)
             print('End of Results')
             print()
 
-
-            delete_already_visited_vertex = current_vertex
-            unvisited_list.remove(delete_already_visited_vertex)
+            # will return so no need to make unvisitied_list 0 to exit while loop
+            #   delete_already_visited_vertex = current_vertex
+            #   unvisited_list.remove(delete_already_visited_vertex)
             return Nearest_Neighbor_Results(order_to_visit, distance_traveled)
 
         # find all vertexes adjacent to the start vertex
@@ -118,19 +116,9 @@ def nearest_neighbor(g, start_vertex):
         delete_already_visited_vertex = current_vertex
 
         current_vertex = closest_location
-        print('Current vertex moved to: ' + str(current_vertex))
-
         unvisited_list.remove(delete_already_visited_vertex)
-        distance_traveled = distance_traveled + closest_location_distance
-
-        print('Closest vertex distance: ' + str(closest_location_distance))
-        print()
-    print()
+        distance_traveled = distance_traveled + float(closest_location_distance)
 
     return Nearest_Neighbor_Results(order_to_visit, distance_traveled)
-
-# obtain distance data from distances.csv
-# implement nearest neighbor algorithm
-
 
 

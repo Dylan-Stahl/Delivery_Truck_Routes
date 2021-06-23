@@ -5,9 +5,10 @@ from nearest_neighbor import Graph, Vertex
 
 
 class LoadLocation:
-    def __init__(self, truck_graph, vertex_list):
+    def __init__(self, truck_graph, vertex_list, truck):
         self.truck_graph = truck_graph
         self.vertex_list = vertex_list
+        self.truck = truck
 
 
 # Change chaining hash table size based on number of packages
@@ -44,23 +45,31 @@ def load_locations(truck):
 
     with open('CSV_files/locations.csv', 'r') as locations_file:
         location_reader = list(csv.reader(locations_file))
-        print(location_reader)
+        #print(location_reader)
 
     with open('CSV_files/distances.csv', 'r') as distances_file:
         distance_reader = list(csv.reader(distances_file))
-        print(distance_reader)
-        print()
+        #print(distance_reader)
+        #print()
 
     # regardless of truck, wgu must be an address/ vertex
+    indice_array = [0]
 
+    # check all packages locations, mark each location as visited, if another package has that same location, do not add
+    # location
+    package_locations = []
     for package in truck.package_array:
+        if package.address not in package_locations:
+            package_locations.append(package.address)
+
+    for package in package_locations:
         i = 0
         for address in location_reader:
-            if location_reader[i][2] == package.address:
+            if location_reader[i][2] == package:
                 # location_reader[i][1] becomes  a key in the dictionary
                 location = location_reader[i][2]
                 locations_to_visit.append(location)
-                package.visited = True
+                indice_array.append(i)
 
             i = i + 1
         # print(package.address)
@@ -70,4 +79,23 @@ def load_locations(truck):
         vertex_list.append(location_vertex)
         truck_graph.add_vertex(location_vertex)
 
-    return LoadLocation(truck_graph, vertex_list)
+    # iterator for directed edges
+    f = 0
+    for e in indice_array:
+        # iterator
+        c = 0
+        # only iterate through coloumns whose indice is in the indice array
+        for col in indice_array:
+            if distance_reader[e][col] != '':
+                first_vertex = vertex_list[f]
+                second_vertex = vertex_list[c]
+                distance = distance_reader[e][col]
+                if float(distance) > 0:
+                    truck_graph.add_undirected_edge(first_vertex, second_vertex, distance)
+                    #print(first_vertex)
+                    #print(second_vertex)
+                    #print(distance_reader[e][col])
+                    #print()
+            c = c + 1
+        f = f + 1
+    return LoadLocation(truck_graph, vertex_list, truck)

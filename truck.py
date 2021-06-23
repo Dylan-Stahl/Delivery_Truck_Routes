@@ -5,6 +5,9 @@ truck_hash = ChainingHashTable(4)
 
 
 def load_trucks():
+    # What i need to change:
+    # packages that have the same location should be put on the same truck
+
     # do a loop using hash search method
     truck_one = []
     truck_two = []
@@ -32,7 +35,7 @@ def load_trucks():
     while c <= i:
         packaged_being_loaded = package_hash.search(c)
         if packaged_being_loaded is not None:
-            # packaged 13, 15, and 19 must be shipped together. These packages do not have to be delivered
+            # packaged 13, 14, 15, 16, 19, and 20 must be shipped together. These packages do not have to be delivered
             # before the end of the day so they will be added to truck one
             if packaged_being_loaded.id == 13 or packaged_being_loaded.id == 14 or packaged_being_loaded.id == 15 or \
                     packaged_being_loaded.id == 16 or packaged_being_loaded.id == 19 or packaged_being_loaded.id == 20:
@@ -61,35 +64,170 @@ def load_trucks():
             if packaged_being_loaded.package_notes == 'None' and packaged_being_loaded.deadline != 'EOD' and packaged_being_loaded.number_on_truck != c:
                 # First two trucks will be leaving the depot first. They will have the packages loaded on them that have
                 # Delivery deadlines before the end of the day.
-                if c % 2 == 0 and j < 16:
-                    j = j + 1
-                    truck_one.append(package_hash.search(c))
-                    package_hash.search(c).number_on_truck = c
 
-                if c % 2 == 1 and d < 16:
-                    d = d + 1
-                    truck_two.append(package_hash.search(c))
-                    package_hash.search(c).number_on_truck = c
+                # NEW IDEA: loop through packages on all trucks, if a truck is visiting the location that the package is being
+                # delivered to, add that package to the truck
+                for package in truck_three:
+                    if packaged_being_loaded is not None:
+                        if packaged_being_loaded.address == package.address and packaged_being_loaded.number_on_truck != c:
+                            if f < 16:
+                                f = f + 1
+                                truck_three.append(packaged_being_loaded)
+                                packaged_being_loaded.number_on_truck = c
+
+                for package in truck_two:
+                    if packaged_being_loaded is not None:
+                        if packaged_being_loaded.address == package.address and packaged_being_loaded.number_on_truck != c:
+                            if d < 16:
+                                d = d + 1
+                                truck_two.append(packaged_being_loaded)
+                                packaged_being_loaded.number_on_truck = c
+
+                for package in truck_one:
+                    if packaged_being_loaded is not None:
+                        if packaged_being_loaded.address == package.address and packaged_being_loaded.number_on_truck != c:
+                            if j < 16:
+                                j = j + 1
+                                truck_one.append(packaged_being_loaded)
+                                packaged_being_loaded.number_on_truck = c
         c = c + 1
+
+    # This while loop loads the packages that do not have special conditions
+    # For each location, create a list with all the packages going there
+    # loop through all package address, for every time there is 1 occurence of an address,
+    # loop through all key and values, if there is more than 1 value that is the same, obtain the keys and do a
+    # package _hash.search(key). Add those packages to a list and when adding packages loop through that list and add
+    # packages to same truck
+
+    # create two lists, one with packages that don't share addreses, and one that shares addresses
+    # holds address
+    packages_with_different_addresses = []
+    # holds package object
+    packages_different_address = []
+
+    # holds address
+    packages_with_same_addresses = []
+    # holds package object
+    packages_same_address = []
 
     c = 0
     while c <= i:
         packaged_being_loaded = package_hash.search(c)
+
+        # NEW IDEA: loop through packages on all trucks, if a truck is visiting the location that the package is being
+        # delivered to, add that package to the truck
+
+        for package in truck_two:
+            if packaged_being_loaded is not None:
+                if packaged_being_loaded.address == package.address and packaged_being_loaded.number_on_truck != c:
+                    if d < 16:
+                        d = d + 1
+                        truck_two.append(packaged_being_loaded)
+                        packaged_being_loaded.number_on_truck = c
+
+        for package in truck_one:
+            if packaged_being_loaded is not None:
+                if packaged_being_loaded.address == package.address and packaged_being_loaded.number_on_truck != c:
+                    if j < 16:
+                        j = j + 1
+                        truck_one.append(packaged_being_loaded)
+                        packaged_being_loaded.number_on_truck = c
+
+        for package in truck_three:
+            if packaged_being_loaded is not None:
+                if packaged_being_loaded.address == package.address and packaged_being_loaded.number_on_truck != c:
+                    if f < 16:
+                        f = f + 1
+                        truck_three.append(packaged_being_loaded)
+                        packaged_being_loaded.number_on_truck = c
+
+        # won't add packages that have already been added to truck by using 'and
+        # packaged_being_loaded.number_on_truck != c'
         if packaged_being_loaded is not None and packaged_being_loaded.number_on_truck != c:
-            if c % 3 == 0 and j < 16:
-                j = j + 1
-                truck_one.append(package_hash.search(c))
-                package_hash.search(c).number_on_truck = c
-
-            if c % 3 == 1 and d < 16:
-                d = d + 1
-                truck_two.append(package_hash.search(c))
-                package_hash.search(c).number_on_truck = c
-
-            if c % 3 == 2 and f < 16:
-                f = f + 1
-                truck_three.append(packaged_being_loaded)
+            if packaged_being_loaded.address not in packages_with_different_addresses:
+                packages_with_different_addresses.append(packaged_being_loaded.address)
+                packages_different_address.append(packaged_being_loaded)
                 packaged_being_loaded.number_on_truck = c
+            else:
+                packages_with_same_addresses.append(packaged_being_loaded.address)
+                packages_same_address.append(packaged_being_loaded)
+                packaged_being_loaded.number_on_truck = c
+
+        c = c + 1
+
+    # want to keep packages with the same addresses on the same truck, lets use truck one if its not full and then
+    # use truck 2 and 3 as backups
+    c = 0
+    for package in packages_same_address:
+        if f < 16 and package.number_on_truck != c:
+            f = f + 1
+            truck_three.append(package)
+            package.number_on_truck = c
+        elif d < 16 and package.number_on_truck != c:
+            d = d + 1
+            truck_two.append(package)
+            package.number_on_truck = c
+        elif j < 16 and package.number_on_truck != c:
+            j = j + 1
+            truck_one.append(package)
+            package.number_on_truck = c
+        c = c + 1
+
+    c = 0
+    for package in packages_different_address:
+        number_of_packages_truck_one = len(truck_one)
+        print(number_of_packages_truck_one)
+        number_of_packages_truck_two = len(truck_two)
+        number_of_packages_truck_three = len(truck_three)
+
+        for package_on_truck_one in truck_one:
+            if package.address == package_on_truck_one.address and package.number_on_truck != c:
+                if j < 16:
+                    j = j + 1
+                    truck_one.append(package)
+                    package.number_on_truck = c
+
+        for package_on_truck_two in truck_two:
+            if package.address == package_on_truck_two.address and package.number_on_truck != c:
+                if d < 16:
+                    d = d + 1
+                    truck_two.append(package)
+                    package.number_on_truck = c
+
+        for package_on_truck_three in truck_three:
+            if package.address == package_on_truck_three.address and package.number_on_truck != c:
+                if f < 16:
+                    f = f + 1
+                    truck_three.append(package)
+                    package.number_on_truck = c
+
+        if package.number_on_truck != c:
+            if number_of_packages_truck_one <= number_of_packages_truck_two <= number_of_packages_truck_three and j < 16:
+                j = j + 1
+                truck_one.append(package)
+                package.number_on_truck = c
+
+            elif number_of_packages_truck_two <= number_of_packages_truck_one and number_of_packages_truck_two <= \
+                    number_of_packages_truck_three and d < 16:
+                d = d + 1
+                truck_two.append(package)
+                package.number_on_truck = c
+
+            elif j < 16:
+                j = j + 1
+                truck_one.append(package)
+                package.number_on_truck = c
+
+            elif d < 16:
+                d = d + 1
+                truck_two.append(package)
+                package.number_on_truck = c
+
+            elif f < 16:
+                f = f + 1
+                truck_three.append(package)
+                package.number_on_truck = c
+
         c = c + 1
 
     # Create truck object
