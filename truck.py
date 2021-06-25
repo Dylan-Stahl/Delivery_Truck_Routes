@@ -1,5 +1,6 @@
 from data_loader import package_hash
 from hash_table_chaining import ChainingHashTable
+import datetime
 
 truck_hash = ChainingHashTable(4)
 
@@ -90,6 +91,16 @@ def load_trucks():
                                 j = j + 1
                                 truck_one.append(packaged_being_loaded)
                                 packaged_being_loaded.number_on_truck = c
+
+                if c % 2 == 0 and j < 16 and packaged_being_loaded.number_on_truck != c:
+                    j = j + 1
+                    truck_one.append(package_hash.search(c))
+                    package_hash.search(c).number_on_truck = c
+
+                if c % 2 == 1 and d < 16 and packaged_being_loaded.number_on_truck != c:
+                    d = d + 1
+                    truck_two.append(package_hash.search(c))
+                    package_hash.search(c).number_on_truck = c
         c = c + 1
 
     # This while loop loads the packages that do not have special conditions
@@ -176,7 +187,6 @@ def load_trucks():
     c = 0
     for package in packages_different_address:
         number_of_packages_truck_one = len(truck_one)
-        print(number_of_packages_truck_one)
         number_of_packages_truck_two = len(truck_two)
         number_of_packages_truck_three = len(truck_three)
 
@@ -213,6 +223,11 @@ def load_trucks():
                 truck_two.append(package)
                 package.number_on_truck = c
 
+            elif f < 16:
+                f = f + 1
+                truck_three.append(package)
+                package.number_on_truck = c
+
             elif j < 16:
                 j = j + 1
                 truck_one.append(package)
@@ -223,17 +238,16 @@ def load_trucks():
                 truck_two.append(package)
                 package.number_on_truck = c
 
-            elif f < 16:
-                f = f + 1
-                truck_three.append(package)
-                package.number_on_truck = c
+
 
         c = c + 1
 
     # Create truck object
-    truck_obj1 = Truck(1, truck_one, '8:00', '8:00')
-    truck_obj2 = Truck(2, truck_two, '8:00', '8:00')
-    truck_obj3 = Truck(3, truck_three, '9:00', '9:05')
+    date = datetime.date.today()
+
+    truck_obj1 = Truck(1, truck_one, datetime.datetime(date.year, date.month,date.day, 8, 0, 0), datetime.datetime(date.year, date.month,date.day, 8, 0, 0))
+    truck_obj2 = Truck(2, truck_two, datetime.datetime(date.year, date.month,date.day, 8, 0, 0), datetime.datetime(date.year, date.month,date.day, 8, 0, 0))
+    truck_obj3 = Truck(3, truck_three, datetime.datetime(date.year, date.month,date.day, 9, 5, 0), datetime.datetime(date.year, date.month,date.day, 9, 5, 0))
 
     # Insert truck into truck hash table
     truck_hash.insert(1, truck_obj1)
@@ -254,7 +268,7 @@ class Truck:
 
     def __str__(self):
         i = 1
-        truck_string = 'Truck ' + str(self.id) + ':\n'
+        truck_string = 'Truck ' + str(self.id) + ', Time left hub: ' + str(self.time_left_hub)  + ', Time truck completed route: ' + str(self.time) + ':\n'
         truck_string = truck_string + 'Package '
         for package in self.package_array:
             if i == 1:

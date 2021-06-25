@@ -1,5 +1,7 @@
 import operator
 from locations import Location
+from datetime import datetime, timedelta
+import math
 
 
 class Nearest_Neighbor_Results:
@@ -72,6 +74,8 @@ def nearest_neighbor(g, start_vertex, truck):
     order_to_visit.append(current_vertex)
 
     # while the unvisited list is not empty
+    # while loop iterator
+    c = 0
     while len(unvisited_list) > 0:
         # iterator
         i = 1
@@ -92,6 +96,9 @@ def nearest_neighbor(g, start_vertex, truck):
             print('End of Results')
             print()
 
+            hours_to_add = (float(distance_traveled) / 18)
+            truck.time = truck.time + timedelta(hours=hours_to_add)
+
             # will return so no need to make unvisitied_list 0 to exit while loop
             #   delete_already_visited_vertex = current_vertex
             #   unvisited_list.remove(delete_already_visited_vertex)
@@ -99,8 +106,12 @@ def nearest_neighbor(g, start_vertex, truck):
 
         # find all vertexes adjacent to the start vertex
         for vertex in g.adjacency_list[current_vertex]:
+            # search through all packages on the truck, if the package address == the vertex.label, than mark the
+            # package as visited
+            # Marks package as delivered
             # find distance between current vertex and vertex
             if i == 1 and vertex.visited == False:
+                # need to update truck time based on closest_location_distance
                 closest_location_distance = g.edge_weights[(current_vertex, vertex)]
                 closest_location = vertex
                 i = i + 1
@@ -109,7 +120,21 @@ def nearest_neighbor(g, start_vertex, truck):
                     closest_location_distance = g.edge_weights[(current_vertex, vertex)]
                     closest_location = vertex
                     i = i + 1
-            # print(vertex)
+
+        if c != 0:
+            for package in truck.package_array:
+                if package.address == closest_location.label:
+                    package.status = 'Delivered'
+                    hours_to_add = (float(closest_location_distance) / 18)
+                    package.time_delivered = last_package.time_delivered + timedelta(hours=hours_to_add)
+        elif c == 0:
+            for package in truck.package_array:
+                if package.address == closest_location.label:
+                    package.status = 'Delivered'
+                    hours_to_add = (float(closest_location_distance) / 18)
+                    package.time_delivered = truck.time + timedelta(hours=hours_to_add)
+                    last_package = package
+
         order_to_visit.append(closest_location)
         current_vertex.visited = True
 
@@ -119,6 +144,15 @@ def nearest_neighbor(g, start_vertex, truck):
         unvisited_list.remove(delete_already_visited_vertex)
         distance_traveled = distance_traveled + float(closest_location_distance)
 
+        for package in truck.package_array:
+            if package.address == closest_location.label:
+                last_package = package
+
+        c = c + 1
+
+    if float(distance_traveled) > 18:
+        hours_to_add = math.floor(float(closest_location_distance) / 18)
+        truck.time = truck.time + timedelta(hours=hours_to_add)
+        print(truck.time)
+
     return Nearest_Neighbor_Results(order_to_visit, distance_traveled)
-
-
