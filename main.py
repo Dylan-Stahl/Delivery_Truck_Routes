@@ -1,97 +1,53 @@
-from data_loader import load_packages, load_locations
-from data_loader import package_hash
-from truck import *
-from nearest_neighbor import Graph, Vertex, nearest_neighbor, truck_three_graph
-import datetime
-import operator
-import numbers
+from user_interface import *
+from data_loader import *
+
 
 # Name: Dylan Stahl
 # Student ID: 002996740
 
-def result():
-    load_packages('CSV_files/packages.csv')
-    first_package = package_hash.search(1)
-    second_package = package_hash.search(2)
-
-    # initializes three trucks
-    load_trucks()
-
-    # new test data
-    # create a truck with every package on it to test algorithm
-
-    truck_one = truck_hash.search(1)
-    truck_two = truck_hash.search(2)
-    truck_three = truck_hash.search(3)
-
-    truck_one_graph = load_locations(truck_one)
-
-    truck_one_graph.truck
-    truck_one_graph.truck_graph.return_to_hub = True
-    print('Truck 1 Results:')
-    test_algorithm = nearest_neighbor(truck_one_graph.truck_graph, truck_one_graph.vertex_list[0], truck_one_graph.truck)
-    i = 0
-    for package in truck_one.package_array:
-        i = i + 1
-    print(str(i) + ' packages')
-    print(test_algorithm.path)
-    print()
-    print(truck_one)
-
-    truck_two_graph = load_locations(truck_two)
-    print('Truck 2 Results:')
-    test_algorithm = nearest_neighbor(truck_two_graph.truck_graph, truck_two_graph.vertex_list[0], truck_two_graph.truck)
-    i = 0
-    for package in truck_two.package_array:
-        i = i + 1
-    print(str(i) + ' packages')
-    print(test_algorithm.path)
-    print()
-    print(truck_two)
-
-    truck_three_graph = load_locations(truck_three)
-    print('Truck 3 Results:')
-    test_algorithm = nearest_neighbor(truck_three_graph.truck_graph, truck_three_graph.vertex_list[0], truck_three_graph.truck)
-    i = 0
-    for package in truck_three.package_array:
-        i = i + 1
-    print(str(i) + ' packages')
-    print(test_algorithm.path)
-    print()
-    print(truck_three)
-
-
-
-
-
-
 def main():
     print('Welcome to Western Governors University Parcel Service (WGUPS), this program has found an efficient route '
-          'and delivery distribution for the Daily Local Deliveries (DLD).')
+          'and delivery distribution for Daily Local Deliveries (DLD). \n')
     user_input = '1'
     while user_input != 'quit':
         print('Press 1 to insert a package into the system')
+        # 2 is complete
         print('Press 2 to check the status of a package')
         print('Press 3 to view the status and info of all packages at a specified time, and the total mileage driven '
               'by each truck')
-        print('Press 4 to view the result')
-        print('Type \'quit\' to stop running application')
+        # 4 is complete
+        print('Press 4 to view the end of day result')
+        print('Press 5 to change the address of package 9, that has in the notes, \'wrong address listed\'')
+        print('Type \'quit\' to exit the application \n')
         print()
 
         user_input = (input(''))
         if user_input == '2':
             package_id_input = (input('Enter the ID of the package: '))
-            if (package_id_input.isdigit()):
+            time_input = input('Enter the time in which you would like to check the package status (HHMM): ')
 
-                print(package_hash.search(int(package_id_input)))
-            else:
-                print('naw')
+            try:
+                time_input_datetime = datetime.datetime.strptime(time_input, "%H%M")
+                current_date = datetime.datetime.today()
+                current_year = current_date.year
+                current_month = current_date.month
+                current_day = current_date.day
+                time_input_datetime = time_input_datetime.replace(year=current_year, month=current_month,
+                                                                  day=current_day)
+                try:
+                    if package_id_input.isdigit():
+                        load_packages('CSV_files/packages.csv')
+                        package_status(package_hash.search(int(package_id_input)), time_input_datetime)
+                    else:
+                        print('Enter a valid integer value for the package you are looking for')
+                except:
+                    print('Enter a valid package ID!')
 
-
-            #package_hash.search(package_id_input)
+            except:
+                print("Please enter correct time in HHMM format")
 
         if user_input == '4':
-            result()
+            end_of_day_result()
 
 
 if __name__ == '__main__':

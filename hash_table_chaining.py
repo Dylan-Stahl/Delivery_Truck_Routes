@@ -38,3 +38,9 @@ class ChainingHashTable:
         for key_value in bucket_list:
             if key_value[0] == key:
                 bucket_list.remove(key_value[0], key_value[1])
+
+    def hash_size(self):
+        i = 0
+        for package in self.table:
+            i = i + 1
+        return i

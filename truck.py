@@ -217,51 +217,6 @@ def load_trucks():
 
         c = c + 1
 
-    '''
-    truck_one.append(package_hash.search(4))
-    truck_one.append(package_hash.search(7))
-    truck_one.append(package_hash.search(13))
-    truck_one.append(package_hash.search(14))
-    truck_one.append(package_hash.search(15))
-    truck_one.append(package_hash.search(16))
-    truck_one.append(package_hash.search(19))
-    truck_one.append(package_hash.search(20))
-    truck_one.append(package_hash.search(21))
-    truck_one.append(package_hash.search(29))
-    truck_one.append(package_hash.search(30))
-    truck_one.append(package_hash.search(31))
-    truck_one.append(package_hash.search(32))
-    truck_one.append(package_hash.search(34))
-    truck_one.append(package_hash.search(39))
-    truck_one.append(package_hash.search(40))
-
-    truck_two.append(package_hash.search(2))
-    truck_two.append(package_hash.search(3))
-    truck_two.append(package_hash.search(5))
-    truck_two.append(package_hash.search(10))
-    truck_two.append(package_hash.search(11))
-    truck_two.append(package_hash.search(12))
-    truck_two.append(package_hash.search(17))
-    #truck_two.append(package_hash.search(18))
-    truck_two.append(package_hash.search(22))
-    truck_two.append(package_hash.search(25))
-    truck_two.append(package_hash.search(26))
-    truck_two.append(package_hash.search(27))
-    truck_two.append(package_hash.search(35))
-    truck_two.append(package_hash.search(37))
-    truck_two.append(package_hash.search(38))
-
-    truck_three.append(package_hash.search(1))
-    truck_three.append(package_hash.search(6))
-    truck_three.append(package_hash.search(8))
-    truck_three.append(package_hash.search(9))
-    truck_three.append(package_hash.search(18))
-    truck_three.append(package_hash.search(23))
-    truck_three.append(package_hash.search(24))
-    truck_three.append(package_hash.search(28))
-    truck_three.append(package_hash.search(33))
-    truck_three.append(package_hash.search(36)) '''
-
     # Create truck object
     date = datetime.date.today()
 

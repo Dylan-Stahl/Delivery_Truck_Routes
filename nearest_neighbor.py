@@ -70,7 +70,7 @@ def nearest_neighbor(g, start_vertex, truck):
         # unvisited_queue = [vertex_1, vertex_2, ...]
 
     # new design here
-    print('Number of locations to visit: ' + str(len(unvisited_list)))
+    # print('Number of locations to visit: ' + str(len(unvisited_list)))
     current_vertex = start_vertex
     order_to_visit.append(current_vertex)
 
@@ -140,18 +140,6 @@ def nearest_neighbor(g, start_vertex, truck):
                     #print(closest_location_distance)
 
                     i = i + 1
-            #print()
-
-                    #print('Closest loc dist= ' + str(closest_location_distance))
-                    #print('Closet loc vertex = ' + str(closest_location))
-        # Big brain idea
-        # run Dijkstra algorithm between current vertex and closest_location
-        # problem: closest location is a label
-        # search through vertex list in the graph, if the vertex.label == closest_location, return vertex and send to get_shortest_path
-        # look into the adjacency lists for each location in data loader, i suspect not all edges are being loaded in.
-        # dijkstra_shortest_path(truck.graph, current_vertex)
-        # get_shortest_path(current_vertex, closest_location)
-
 
         if c != 0:
             for package in truck.package_array:

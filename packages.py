@@ -21,6 +21,26 @@ class Package:
     def get_id(self):
         return self.id
 
+    def check_status_en_route(self):
+        if self.time_delivered.hour == (23):
+            time_delivered_str = ''
+        else:
+            time_delivered_str = ', Expected Delivery Time: ' + str(self.time_delivered)
+
+        return 'ID = ' + str(self.id) + ', Address: ' + str(self.address) + ', Deadline: ' + str(self.deadline) \
+               + ', City: ' + str(self.city) + ', Zip Code: ' + str(self.zip) + ', Weight: ' + str(self.mass) \
+               + ', Status: ' + str(self.status) + ', Notes: ' + str(self.package_notes) + time_delivered_str
+
+    def check_status_at_hub(self):
+        if self.time_delivered.hour == (23):
+            time_delivered_str = ''
+        else:
+            time_delivered_str = ', Expected Delivery Time: ' + str(self.time_delivered)
+
+        return 'ID = ' + str(self.id) + ', Address: ' + str(self.address) + ', Deadline: ' + str(self.deadline) \
+               + ', City: ' + str(self.city) + ', Zip Code: ' + str(self.zip) + ', Weight: ' + str(self.mass) \
+               + ', Status: ' + str(self.status) + ', Notes: ' + str(self.package_notes) + time_delivered_str
+
     def __str__(self):
         if self.time_delivered.hour == (23):
             time_delivered_str = ''
