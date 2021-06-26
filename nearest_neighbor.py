@@ -5,9 +5,10 @@ import math
 
 
 class Nearest_Neighbor_Results:
-    def __init__(self, ordered_list_delivery, total_distance):
+    def __init__(self, ordered_list_delivery, total_distance, path):
         self.ordered_list_delivery = ordered_list_delivery
         self.total_distance = total_distance
+        self.path = path
 
 
 class Vertex:
@@ -88,13 +89,19 @@ def nearest_neighbor(g, start_vertex, truck):
                 closest_location = start_vertex
                 order_to_visit.append(closest_location)
                 current_vertex.visited == True
+                #print('Closest loc dist= ' + str(closest_location_distance))
+                #print('Closet loc vertex = ' + str(closest_location))
 
-            print('Total distance traveled: ' + str(distance_traveled))
-            print('Path: ')
+            path = 'Total distance traveled ' + str(distance_traveled) + '\n' + 'Path: '
+            path_list = ''
+            z = 0
             for location in order_to_visit:
-                print(location)
-            print('End of Results')
-            print()
+                if z == 0:
+                    path_list = path_list + str(location)
+                    z = z + 1
+                else:
+                    path_list = path_list + ', ' + str(location)
+            path = path + path_list
 
             hours_to_add = (float(distance_traveled) / 18)
             truck.time = truck.time + timedelta(hours=hours_to_add)
@@ -102,24 +109,49 @@ def nearest_neighbor(g, start_vertex, truck):
             # will return so no need to make unvisitied_list 0 to exit while loop
             #   delete_already_visited_vertex = current_vertex
             #   unvisited_list.remove(delete_already_visited_vertex)
-            return Nearest_Neighbor_Results(order_to_visit, distance_traveled)
+            return Nearest_Neighbor_Results(order_to_visit, distance_traveled, path)
 
         # find all vertexes adjacent to the start vertex
         for vertex in g.adjacency_list[current_vertex]:
+            #print(current_vertex)
+            #print(vertex)
             # search through all packages on the truck, if the package address == the vertex.label, than mark the
             # package as visited
             # Marks package as delivered
             # find distance between current vertex and vertex
             if i == 1 and vertex.visited == False:
                 # need to update truck time based on closest_location_distance
-                closest_location_distance = g.edge_weights[(current_vertex, vertex)]
+                closest_location_distance = float(g.edge_weights[(current_vertex, vertex)])
                 closest_location = vertex
+                #print(closest_location_distance)
                 i = i + 1
+                #print('Closest loc dist= ' + str(closest_location_distance))
+                #print('Closet loc vertex = ' + str(closest_location))
+            # Just fixed bux here that I have been working on for days The current vertex and vertex being looped
+            # through were being compared against a string of a number (closest_location_distance), I simply converted
+            # each string to a float and now the nearest neighbor algorithm is extremely efficient
             else:
-                if g.edge_weights[(current_vertex, vertex)] < closest_location_distance and vertex.visited == False:
+                if float(g.edge_weights[(current_vertex, vertex)]) < float(closest_location_distance) and vertex.visited == False:
+                    #print(g.edge_weights[(current_vertex, vertex)])
+                    #print(closest_location_distance)
+
                     closest_location_distance = g.edge_weights[(current_vertex, vertex)]
                     closest_location = vertex
+                    #print(closest_location_distance)
+
                     i = i + 1
+            #print()
+
+                    #print('Closest loc dist= ' + str(closest_location_distance))
+                    #print('Closet loc vertex = ' + str(closest_location))
+        # Big brain idea
+        # run Dijkstra algorithm between current vertex and closest_location
+        # problem: closest location is a label
+        # search through vertex list in the graph, if the vertex.label == closest_location, return vertex and send to get_shortest_path
+        # look into the adjacency lists for each location in data loader, i suspect not all edges are being loaded in.
+        # dijkstra_shortest_path(truck.graph, current_vertex)
+        # get_shortest_path(current_vertex, closest_location)
+
 
         if c != 0:
             for package in truck.package_array:
@@ -156,3 +188,6 @@ def nearest_neighbor(g, start_vertex, truck):
         print(truck.time)
 
     return Nearest_Neighbor_Results(order_to_visit, distance_traveled)
+
+
+

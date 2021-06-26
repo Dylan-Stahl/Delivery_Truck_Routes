@@ -92,10 +92,17 @@ def load_locations(truck):
                 distance = distance_reader[e][col]
                 if float(distance) > 0:
                     truck_graph.add_undirected_edge(first_vertex, second_vertex, distance)
-                    #print(first_vertex)
-                    #print(second_vertex)
-                    #print(distance_reader[e][col])
-                    #print()
+                    '''
+                    print(first_vertex)
+                    print(second_vertex)
+
+                    # search for second vertex
+                    print(distance_reader[e][col])
+                    if distance_reader[col][e] != '':
+                        print(distance_reader[col][e])
+                    print() '''
             c = c + 1
         f = f + 1
+
+
     return LoadLocation(truck_graph, vertex_list, truck)
