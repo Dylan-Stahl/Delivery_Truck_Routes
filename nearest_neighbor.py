@@ -89,10 +89,10 @@ def nearest_neighbor(g, start_vertex, truck):
                 closest_location = start_vertex
                 order_to_visit.append(closest_location)
                 current_vertex.visited == True
-                #print('Closest loc dist= ' + str(closest_location_distance))
-                #print('Closet loc vertex = ' + str(closest_location))
+                # print('Closest loc dist= ' + str(closest_location_distance))
+                # print('Closet loc vertex = ' + str(closest_location))
 
-            path = 'Total distance traveled ' + str(distance_traveled) + '\n' + 'Path: '
+            path = 'Total distance to travel or traveled ' + str(round(distance_traveled, 1)) + ' miles.' + '\n' + 'Path: '
             path_list = ''
             z = 0
             for location in order_to_visit:
@@ -113,8 +113,8 @@ def nearest_neighbor(g, start_vertex, truck):
 
         # find all vertexes adjacent to the start vertex
         for vertex in g.adjacency_list[current_vertex]:
-            #print(current_vertex)
-            #print(vertex)
+            # print(current_vertex)
+            # print(vertex)
             # search through all packages on the truck, if the package address == the vertex.label, than mark the
             # package as visited
             # Marks package as delivered
@@ -123,21 +123,22 @@ def nearest_neighbor(g, start_vertex, truck):
                 # need to update truck time based on closest_location_distance
                 closest_location_distance = float(g.edge_weights[(current_vertex, vertex)])
                 closest_location = vertex
-                #print(closest_location_distance)
+                # print(closest_location_distance)
                 i = i + 1
-                #print('Closest loc dist= ' + str(closest_location_distance))
-                #print('Closet loc vertex = ' + str(closest_location))
+                # print('Closest loc dist= ' + str(closest_location_distance))
+                # print('Closet loc vertex = ' + str(closest_location))
             # Just fixed bux here that I have been working on for days The current vertex and vertex being looped
             # through were being compared against a string of a number (closest_location_distance), I simply converted
             # each string to a float and now the nearest neighbor algorithm is extremely efficient
             else:
-                if float(g.edge_weights[(current_vertex, vertex)]) < float(closest_location_distance) and vertex.visited == False:
-                    #print(g.edge_weights[(current_vertex, vertex)])
-                    #print(closest_location_distance)
+                if float(g.edge_weights[(current_vertex, vertex)]) < float(
+                        closest_location_distance) and vertex.visited == False:
+                    # print(g.edge_weights[(current_vertex, vertex)])
+                    # print(closest_location_distance)
 
                     closest_location_distance = g.edge_weights[(current_vertex, vertex)]
                     closest_location = vertex
-                    #print(closest_location_distance)
+                    # print(closest_location_distance)
 
                     i = i + 1
 
@@ -176,6 +177,3 @@ def nearest_neighbor(g, start_vertex, truck):
         print(truck.time)
 
     return Nearest_Neighbor_Results(order_to_visit, distance_traveled)
-
-
-

@@ -244,6 +244,19 @@ class Truck:
         self.time = time
         self.time_left_hub = time_left_hub
 
+    def truck_header_at_specified_time(self, time_specified):
+        if self.time < time_specified:
+            truck_string = 'Truck ' + str(self.id) + ', Time left hub: ' + str(
+                self.time_left_hub) + ', Time truck completed route: ' + str(self.time) + ':'
+            return truck_string
+        elif self.time > time_specified > self.time_left_hub:
+            truck_string = 'Truck ' + str(self.id) + ', Time left hub: ' + str(
+                self.time_left_hub) + ', Time expected to complete route: ' + str(self.time) + ':'
+            return truck_string
+        elif time_specified < self.time_left_hub:
+            truck_string = 'Truck ' + str(self.id) + ', Truck leaving hub at: ' + str(
+                self.time_left_hub) + ', Time expected to complete route: ' + str(self.time) + ':'
+            return truck_string
 
     def __str__(self):
         i = 1

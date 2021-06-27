@@ -10,19 +10,21 @@ def main():
           'and delivery distribution for Daily Local Deliveries (DLD). \n')
     user_input = '1'
     while user_input != 'quit':
-        print('Press 1 to insert a package into the system')
-        # 2 is complete
-        print('Press 2 to check the status of a package')
-        print('Press 3 to view the status and info of all packages at a specified time, and the total mileage driven '
+
+        # 1 is complete
+        print('Press 1 to check the status of a package')
+        #
+        print('Press 2 to view the status and info of all packages at a specified time, and the total mileage driven '
               'by each truck')
-        # 4 is complete
-        print('Press 4 to view the end of day result')
-        print('Press 5 to change the address of package 9, that has in the notes, \'wrong address listed\'')
+        # 3 is complete
+        print('Press 3 to view the end of day result')
+        print('Press 4 to change the address of package 9, that has in the notes, \'wrong address listed\'')
         print('Type \'quit\' to exit the application \n')
         print()
 
         user_input = (input(''))
-        if user_input == '2':
+
+        if user_input == '1':
             package_id_input = (input('Enter the ID of the package: '))
             time_input = input('Enter the time in which you would like to check the package status (HHMM): ')
 
@@ -46,7 +48,24 @@ def main():
             except:
                 print("Please enter correct time in HHMM format")
 
-        if user_input == '4':
+        elif user_input =='2':
+            time_input = input(
+                'Enter the time in which you would like to check the status of all truck and packages (HHMM): ')
+
+            try:
+                time_input_datetime = datetime.datetime.strptime(time_input, "%H%M")
+                current_date = datetime.datetime.today()
+                current_year = current_date.year
+                current_month = current_date.month
+                current_day = current_date.day
+                time_input_datetime = time_input_datetime.replace(year=current_year, month=current_month,
+                                                                  day=current_day)
+
+                results_at_specified_time(time_input_datetime)
+            except:
+                print("Please enter correct time in HHMM format \n")
+
+        if user_input == '3':
             end_of_day_result()
 
 
