@@ -1,7 +1,6 @@
 import csv
-from packages import Package
+from packages import Package, package_hash
 from hash_table_chaining import ChainingHashTable
-from nearest_neighbor import Graph, Vertex
 
 
 class LoadLocation:
@@ -11,8 +10,41 @@ class LoadLocation:
         self.truck = truck
 
 
-# Change chaining hash table size based on number of packages
-package_hash = ChainingHashTable(41)
+class Vertex:
+    # Constructor for a new Vertx object. All vertex objects
+    # start with a distance of positive infinity.
+    def __init__(self, label):
+        self.label = label
+        self.distance = float('inf')
+        self.pred_vertex = None
+        self.visited = False
+
+    def __str__(self):
+        return self.label
+
+
+class Graph:
+    def __init__(self):
+        self.adjacency_list = {}
+        self.edge_weights = {}
+        self.return_to_hub = False
+
+    def get_vertexes(self):
+        adjacency_list = []
+        for vertex in self.adjacency_list:
+            adjacency_list.append(vertex.label)
+        return adjacency_list
+
+    def add_vertex(self, new_vertex):
+        self.adjacency_list[new_vertex] = []
+
+    def add_directed_edge(self, from_vertex, to_vertex, weight=1.0):
+        self.edge_weights[(from_vertex, to_vertex)] = weight
+        self.adjacency_list[from_vertex].append(to_vertex)
+
+    def add_undirected_edge(self, vertex_a, vertex_b, weight=1.0):
+        self.add_directed_edge(vertex_a, vertex_b, weight)
+        self.add_directed_edge(vertex_b, vertex_a, weight)
 
 
 def load_packages(fileName):
@@ -37,6 +69,49 @@ def load_packages(fileName):
             package_hash.insert(package_id, package_obj)
 
 
+def determine_distance_two_locations(location_list):
+    locations_to_visit = []
+    vertex_list = []
+
+    with open('CSV_files/locations.csv', 'r') as locations_file:
+        location_reader = list(csv.reader(locations_file))
+        # print(location_reader)
+
+    with open('CSV_files/distances.csv', 'r') as distances_file:
+        distance_reader = list(csv.reader(distances_file))
+        # print(distance_reader)
+        # print()
+
+    indice_array = []
+
+    for location in location_list:
+        i = 0
+        for address in location_reader:
+            if location_reader[i][2] == location:
+                # location_reader[i][1] becomes  a key in the dictionary
+                location_in_csv = location_reader[i][2]
+                locations_to_visit.append(location_in_csv)
+                indice_array.append(i)
+
+            i = i + 1
+
+    # iterator for directed edges
+    f = 0
+    for e in indice_array:
+        # iterator
+        c = 0
+        # only iterate through coloumns whose indice is in the indice array
+        for col in indice_array:
+            if distance_reader[e][col] != '':
+                distance = distance_reader[e][col]
+                if float(distance) > 0:
+                    return (distance_reader[e][col])
+            c = c + 1
+        f = f + 1
+
+    return
+
+
 def load_locations(truck):
     truck_graph = Graph()
 
@@ -45,12 +120,12 @@ def load_locations(truck):
 
     with open('CSV_files/locations.csv', 'r') as locations_file:
         location_reader = list(csv.reader(locations_file))
-        #print(location_reader)
+        # print(location_reader)
 
     with open('CSV_files/distances.csv', 'r') as distances_file:
         distance_reader = list(csv.reader(distances_file))
-        #print(distance_reader)
-        #print()
+        # print(distance_reader)
+        # print()
 
     # regardless of truck, wgu must be an address/ vertex
     indice_array = [0]
@@ -103,6 +178,5 @@ def load_locations(truck):
                     print() '''
             c = c + 1
         f = f + 1
-
 
     return LoadLocation(truck_graph, vertex_list, truck)

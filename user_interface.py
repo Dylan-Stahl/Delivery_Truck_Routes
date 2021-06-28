@@ -1,5 +1,5 @@
 from data_loader import load_packages, load_locations
-from data_loader import package_hash
+from packages import package_hash
 from truck import *
 from nearest_neighbor import Graph, Vertex, nearest_neighbor, truck_three_graph
 import datetime
@@ -187,6 +187,10 @@ def package_status(package_to_check, time):
     truck_two_graph = load_locations(truck_two)
     truck_three_graph = load_locations(truck_three)
 
+    package_nine_original_address = package_hash.search(9).address
+    package_nine_corrected_time = datetime.datetime.today()
+    package_nine_corrected_time = package_nine_corrected_time.replace(hour=10, minute=20)
+
     nearest_neighbor_results_1 = nearest_neighbor(truck_one_graph.truck_graph, truck_one_graph.vertex_list[0],
                                                   truck_one_graph.truck)
     nearest_neighbor_results_2 = nearest_neighbor(truck_two_graph.truck_graph, truck_two_graph.vertex_list[0],
@@ -198,9 +202,11 @@ def package_status(package_to_check, time):
         # loop through the package hash, if package_to_check == element in the package hash, save the id for further
         # calculate size of the package hash
         if package.id == package_to_check.id:
+            if package.package_notes == 'Wrong address listed' and time < package_nine_corrected_time:
+                package.address = package_nine_original_address
             if truck_one.time_left_hub < time < package.time_delivered:
                 package.status = 'En Route'
-                print(package.check_status_en_route())
+                print(package.check_status_en_route(time))
             elif truck_one.time_left_hub <= package.time_delivered <= time:
                 package.status = 'Delivered'
                 print(package)
@@ -212,9 +218,11 @@ def package_status(package_to_check, time):
         # package = package_hash.search()
     for package in truck_two.package_array:
         if package.id == package_to_check.id:
+            if package.package_notes == 'Wrong address listed' and time < package_nine_corrected_time:
+                package.address = package_nine_original_address
             if truck_two.time_left_hub < time < package.time_delivered:
                 package.status = 'En Route'
-                print(package.check_status_en_route())
+                print(package.check_status_en_route(time))
             elif truck_two.time_left_hub <= package.time_delivered <= time:
                 package.status = 'Delivered'
                 print(package)
@@ -225,9 +233,11 @@ def package_status(package_to_check, time):
             return
     for package in truck_three.package_array:
         if package.id == package_to_check.id:
+            if package.package_notes == 'Wrong address listed' and time < package_nine_corrected_time:
+                package.address = package_nine_original_address
             if truck_three.time_left_hub < time < package.time_delivered:
                 package.status = 'En Route'
-                print(package.check_status_en_route())
+                print(package.check_status_en_route(time))
             elif truck_three.time_left_hub <= package.time_delivered <= time:
                 package.status = 'Delivered'
                 print(package)

@@ -1,5 +1,6 @@
 from user_interface import *
 from data_loader import *
+from packages import *
 
 
 # Name: Dylan Stahl
@@ -42,11 +43,14 @@ def main():
                         package_status(package_hash.search(int(package_id_input)), time_input_datetime)
                     else:
                         print('Enter a valid integer value for the package you are looking for')
-                except:
+                except Exception as e:
                     print('Enter a valid package ID!')
+                    print(e.with_traceback())
 
-            except:
+            except Exception as e2:
+
                 print("Please enter correct time in HHMM format")
+                print(e2.with_traceback())
 
         elif user_input =='2':
             time_input = input(

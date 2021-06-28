@@ -1,4 +1,4 @@
-from data_loader import package_hash
+from packages import package_hash
 from hash_table_chaining import ChainingHashTable
 import datetime
 
@@ -43,6 +43,7 @@ def load_trucks():
                 j = j + 1
                 truck_one.append(package_hash.search(c))
                 package_hash.search(c).number_on_truck = c
+
 
             # if the package must be on truck two, that package is added to truck two
             if packaged_being_loaded.package_notes == 'Can only be on truck 2' and d < 16:

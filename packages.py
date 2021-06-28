@@ -1,10 +1,12 @@
 import datetime
+from hash_table_chaining import ChainingHashTable
 
 date = datetime.date.today()
+package_hash = ChainingHashTable(41)
 
 
 class Package:
-    def __init__(self, id, address, city, state, zip, deadline, mass, package_notes, status='At the hub', time_delivered = datetime.datetime(date.year, date.month, date.day, 23, 59, 0),
+    def __init__(self, id, address, city, state, zip, deadline, mass, package_notes, visited = False, status='At the hub', time_delivered = datetime.datetime(date.year, date.month, date.day, 23, 59, 0),
                  number_on_truck=-1):
         self.id = id
         self.address = address
@@ -17,6 +19,7 @@ class Package:
         self.status = status
         self.number_on_truck = number_on_truck
         self.time_delivered = time_delivered
+        self.visited = visited
 
     def get_id(self):
         return self.id
