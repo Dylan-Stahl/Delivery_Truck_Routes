@@ -8,7 +8,7 @@ import numbers
 
 
 def end_of_day_result():
-    load_packages('CSV_files/packages.csv')
+    # load_packages('CSV_files/packages.csv')
 
     # initializes three trucks
     load_trucks()
@@ -68,12 +68,15 @@ def end_of_day_result():
 
 
 def results_at_specified_time(time):
-    load_packages('CSV_files/packages.csv')
+    # load_packages('CSV_files/packages.csv')
 
     # initializes three trucks
     load_trucks()
 
     # new test data
+    package_nine_original_address = package_hash.search(9).address
+    package_nine_corrected_time = datetime.datetime.today()
+    package_nine_corrected_time = package_nine_corrected_time.replace(hour=10, minute=20)
     # create a truck with every package on it to test algorithm
 
     truck_one = truck_hash.search(1)
@@ -98,6 +101,8 @@ def results_at_specified_time(time):
     print(truck_one.truck_header_at_specified_time(time))
 
     for package in truck_one.package_array:
+        if package.package_notes == 'Wrong address listed' and time < package_nine_corrected_time:
+            package.address = package_nine_original_address
         if truck_one.time_left_hub < time < package.time_delivered:
             package.status = 'En Route'
             print('Package ' + str(package.check_status_en_route(time)))
@@ -113,6 +118,7 @@ def results_at_specified_time(time):
     nearest_neighbor_results_2 = nearest_neighbor(truck_two_graph.truck_graph, truck_two_graph.vertex_list[0],
                                                   truck_two_graph.truck)
     print('Truck 2 Results:')
+    i = 0
     for package in truck_two.package_array:
         i = i + 1
     print(str(i) + ' packages')
@@ -122,6 +128,8 @@ def results_at_specified_time(time):
     i = 0
 
     for package in truck_two.package_array:
+        if package.package_notes == 'Wrong address listed' and time < package_nine_corrected_time:
+            package.address = package_nine_original_address
         if truck_two.time_left_hub < time < package.time_delivered:
             package.status = 'En Route'
             print('Package ' + str(package.check_status_en_route(time)))
@@ -146,6 +154,8 @@ def results_at_specified_time(time):
     print()
     print(truck_three.truck_header_at_specified_time(time))
     for package in truck_three.package_array:
+        if package.package_notes == 'Wrong address listed' and time < package_nine_corrected_time:
+            package.address = package_nine_original_address
         if truck_three.time_left_hub < time < package.time_delivered:
             package.status = 'En Route'
             print('Package ' + str(package.check_status_en_route(time)))
@@ -170,7 +180,7 @@ def package_status(package_to_check, time):
     # as en route.
     # if the truck hasn't left the depot left, mark package status as at hub, else mark delivered
 
-    load_packages('CSV_files/packages.csv')
+    # load_packages('CSV_files/packages.csv')
 
     # initializes three trucks
     load_trucks()

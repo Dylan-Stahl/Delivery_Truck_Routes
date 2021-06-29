@@ -2,7 +2,7 @@ import datetime
 from hash_table_chaining import ChainingHashTable
 
 date = datetime.date.today()
-package_hash = ChainingHashTable(41)
+package_hash = ChainingHashTable(48)
 
 
 class Package:

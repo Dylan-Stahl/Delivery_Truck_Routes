@@ -13,11 +13,16 @@ def load_trucks():
     truck_one = []
     truck_two = []
     truck_three = []
+    indice_array = []
 
     # i represents number of packages
     i = 0
-    for package in package_hash.table:
-        i = i + 1
+    for package in range(len(package_hash.table)):
+        #print(package)
+        if package_hash.search(package) is not None:
+            i = i + 1
+            indice_array.append(package_hash.search(package).id)
+            package_hash.search(package).number_on_truck = -1
 
     # iterator for number of packages on truck one
     j = 0
@@ -33,8 +38,8 @@ def load_trucks():
 
     # first while loop inserts packages that have special requirements, like being with other packages, must be on
     # truck two, if the package is delayed, and if the package must be delivered before the end of the day
-    while c <= i:
-        packaged_being_loaded = package_hash.search(c)
+    for package_id in indice_array:
+        packaged_being_loaded = package_hash.search(package_id)
         if packaged_being_loaded is not None:
             # packaged 13, 14, 15, 16, 19, and 20 must be shipped together. These packages do not have to be delivered
             # before the end of the day so they will be added to truck one
@@ -42,31 +47,30 @@ def load_trucks():
                     packaged_being_loaded.id == 16 or packaged_being_loaded.id == 19 or packaged_being_loaded.id == 20:
                 j = j + 1
                 truck_one.append(package_hash.search(c))
-                package_hash.search(c).number_on_truck = c
+                packaged_being_loaded.number_on_truck = c
 
 
             # if the package must be on truck two, that package is added to truck two
             if packaged_being_loaded.package_notes == 'Can only be on truck 2' and d < 16:
                 d = d + 1
-                truck_two.append(package_hash.search(c))
-                package_hash.search(c).number_on_truck = c
+                truck_two.append(packaged_being_loaded)
+                packaged_being_loaded.number_on_truck = c
 
             if packaged_being_loaded.package_notes == 'Wrong address listed' and f < 16:
                 f = f + 1
-                truck_three.append(package_hash.search(c))
-                package_hash.search(c).number_on_truck = c
+                truck_three.append(packaged_being_loaded)
+                packaged_being_loaded.number_on_truck = c
 
             if packaged_being_loaded.package_notes.startswith('Delayed') and f < 16:
                 d = d + 1
-                truck_two.append(package_hash.search(c))
-                package_hash.search(c).number_on_truck = c
+                truck_two.append(packaged_being_loaded)
+                packaged_being_loaded.number_on_truck = c
 
             # if the package has no special notes and has to be delivered before the end of the day, they are added
             # to trucks 1 and 2. By using the iterator the packages are alternated between loading on truck 1 and 2.
             if packaged_being_loaded.package_notes == 'None' and packaged_being_loaded.deadline != 'EOD' and packaged_being_loaded.number_on_truck != c:
                 # First two trucks will be leaving the depot first. They will have the packages loaded on them that have
                 # Delivery deadlines before the end of the day.
-
                 # NEW IDEA: loop through packages on all trucks, if a truck is visiting the location that the package is being
                 # delivered to, add that package to the truck
 
@@ -88,14 +92,15 @@ def load_trucks():
 
                 if c % 2 == 0 and j < 16 and packaged_being_loaded.number_on_truck != c:
                     j = j + 1
-                    truck_one.append(package_hash.search(c))
-                    package_hash.search(c).number_on_truck = c
+                    truck_one.append(packaged_being_loaded)
+                    packaged_being_loaded.number_on_truck = c
 
                 if c % 2 == 1 and d < 16 and packaged_being_loaded.number_on_truck != c:
                     d = d + 1
-                    truck_two.append(package_hash.search(c))
-                    package_hash.search(c).number_on_truck = c
-        c = c + 1
+                    truck_two.append(packaged_being_loaded)
+                    packaged_being_loaded.number_on_truck = c
+            c = c + 1
+
 
     # This while loop loads the packages that do not have special conditions
     # For each location, create a list with all the packages going there
@@ -116,47 +121,47 @@ def load_trucks():
     packages_same_address = []
 
     c = 0
-    while c <= i:
-        packaged_being_loaded = package_hash.search(c)
+    for package_id in indice_array:
+        packaged_being_loaded = package_hash.search(package_id)
+        if packaged_being_loaded is not None:
+            # NEW IDEA: loop through packages on all trucks, if a truck is visiting the location that the package is being
+            # delivered to, add that package to the truck
 
-        # NEW IDEA: loop through packages on all trucks, if a truck is visiting the location that the package is being
-        # delivered to, add that package to the truck
+            for package in truck_two:
+                if packaged_being_loaded is not None:
+                    if packaged_being_loaded.address == package.address and packaged_being_loaded.number_on_truck != c:
+                        if d < 16:
+                            d = d + 1
+                            truck_two.append(packaged_being_loaded)
+                            packaged_being_loaded.number_on_truck = c
 
-        for package in truck_two:
-            if packaged_being_loaded is not None:
-                if packaged_being_loaded.address == package.address and packaged_being_loaded.number_on_truck != c:
-                    if d < 16:
-                        d = d + 1
-                        truck_two.append(packaged_being_loaded)
-                        packaged_being_loaded.number_on_truck = c
+            for package in truck_one:
+                if packaged_being_loaded is not None:
+                    if packaged_being_loaded.address == package.address and packaged_being_loaded.number_on_truck != c:
+                        if j < 16:
+                            j = j + 1
+                            truck_one.append(packaged_being_loaded)
+                            packaged_being_loaded.number_on_truck = c
 
-        for package in truck_one:
-            if packaged_being_loaded is not None:
-                if packaged_being_loaded.address == package.address and packaged_being_loaded.number_on_truck != c:
-                    if j < 16:
-                        j = j + 1
-                        truck_one.append(packaged_being_loaded)
-                        packaged_being_loaded.number_on_truck = c
+            for package in truck_three:
+                if packaged_being_loaded is not None:
+                    if packaged_being_loaded.address == package.address and packaged_being_loaded.number_on_truck != c:
+                        if f < 16:
+                            f = f + 1
+                            truck_three.append(packaged_being_loaded)
+                            packaged_being_loaded.number_on_truck = c
 
-        for package in truck_three:
-            if packaged_being_loaded is not None:
-                if packaged_being_loaded.address == package.address and packaged_being_loaded.number_on_truck != c:
-                    if f < 16:
-                        f = f + 1
-                        truck_three.append(packaged_being_loaded)
-                        packaged_being_loaded.number_on_truck = c
-
-        # won't add packages that have already been added to truck by using 'and
-        # packaged_being_loaded.number_on_truck != c'
-        if packaged_being_loaded is not None and packaged_being_loaded.number_on_truck != c:
-            if packaged_being_loaded.address not in packages_with_different_addresses:
-                packages_with_different_addresses.append(packaged_being_loaded.address)
-                packages_different_address.append(packaged_being_loaded)
-                packaged_being_loaded.number_on_truck = c
-            else:
-                packages_with_same_addresses.append(packaged_being_loaded.address)
-                packages_same_address.append(packaged_being_loaded)
-                packaged_being_loaded.number_on_truck = c
+            # won't add packages that have already been added to truck by using 'and
+            # packaged_being_loaded.number_on_truck != c'
+            if packaged_being_loaded is not None and packaged_being_loaded.number_on_truck != c:
+                if packaged_being_loaded.address not in packages_with_different_addresses:
+                    packages_with_different_addresses.append(packaged_being_loaded.address)
+                    packages_different_address.append(packaged_being_loaded)
+                    packaged_being_loaded.number_on_truck = c
+                else:
+                    packages_with_same_addresses.append(packaged_being_loaded.address)
+                    packages_same_address.append(packaged_being_loaded)
+                    packaged_being_loaded.number_on_truck = c
 
         c = c + 1
 
@@ -234,6 +239,9 @@ def load_trucks():
     truck_hash.insert(3, truck_obj3)
 
 
+
+
+
 class Truck:
     def __init__(self, id, packages, time, time_left_hub):
         self.package_array = []
@@ -246,15 +254,15 @@ class Truck:
         self.time_left_hub = time_left_hub
 
     def truck_header_at_specified_time(self, time_specified):
-        if self.time < time_specified:
+        if self.time <= time_specified:
             truck_string = 'Truck ' + str(self.id) + ', Time left hub: ' + str(
                 self.time_left_hub) + ', Time truck completed route: ' + str(self.time) + ':'
             return truck_string
-        elif self.time > time_specified > self.time_left_hub:
+        elif self.time >= time_specified >= self.time_left_hub:
             truck_string = 'Truck ' + str(self.id) + ', Time left hub: ' + str(
                 self.time_left_hub) + ', Time expected to complete route: ' + str(self.time) + ':'
             return truck_string
-        elif time_specified < self.time_left_hub:
+        elif time_specified <= self.time_left_hub:
             truck_string = 'Truck ' + str(self.id) + ', Truck leaving hub at: ' + str(
                 self.time_left_hub) + ', Time expected to complete route: ' + str(self.time) + ':'
             return truck_string
