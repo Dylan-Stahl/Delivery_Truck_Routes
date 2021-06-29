@@ -230,8 +230,8 @@ def load_trucks():
                        datetime.datetime(date.year, date.month, date.day, 8, 0, 0))
     truck_obj2 = Truck(2, truck_two, datetime.datetime(date.year, date.month, date.day, 9, 5, 0),
                        datetime.datetime(date.year, date.month, date.day, 9, 5, 0))
-    truck_obj3 = Truck(3, truck_three, datetime.datetime(date.year, date.month, date.day, 9, 45, 20),
-                       datetime.datetime(date.year, date.month, date.day, 9, 45, 20))
+    truck_obj3 = Truck(3, truck_three, datetime.datetime(date.year, date.month, date.day, 10, 24, 20),
+                       datetime.datetime(date.year, date.month, date.day, 10, 24, 20))
 
     # Insert truck into truck hash table
     truck_hash.insert(1, truck_obj1)
