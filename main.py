@@ -106,7 +106,8 @@ def main():
             print('Please enter the package information carefully, it is case sensitive.')
             package_id = input('Enter the package id (Must be unique, any id after 40 and before 47: \n')
             package_address = input('Enter the package address (must be a location in the spreadsheet): \n')
-            package_deadline = input('Enter the package deadline (No guarantee delivery before 10:30). HHMM format: ')
+            package_deadline = input('Enter the package deadline (No guarantee delivery before 10:30) or EOD. HHMM '
+                                     'format: ')
             package_city = input('Enter the package\'s delivery city: ')
             package_zip = input('Enter the package\'s delivery zip code: ')
             package_weight = input('Enter the package\'s weight in pounds: ')
@@ -116,28 +117,29 @@ def main():
 
             # Try except block is used to ensure correct time format is entered. Error message printed to user if
             # the wrong format is entered.
-            try:
-                # package_deadline collects the correct hour and minute but do not get the current year, month,
-                # or day. To set the current year, month, and day an instance of datetime.today() is made. From that
-                # instance the current year, month, and day can be obtained. time_input_datetime's year, month, and day
-                # can be set to these values using the replace method.
-                package_deadline = datetime.datetime.strptime(package_deadline, "%H%M")
-                current_date = datetime.datetime.today()
-                current_year = current_date.year
-                current_month = current_date.month
-                current_day = current_date.day
+            if package_deadline != 'EOD':
+                try:
+                    # package_deadline collects the correct hour and minute but do not get the current year, month,
+                    # or day. To set the current year, month, and day an instance of datetime.today() is made. From that
+                    # instance the current year, month, and day can be obtained. time_input_datetime's year, month, and day
+                    # can be set to these values using the replace method.
+                    package_deadline = datetime.datetime.strptime(package_deadline, "%H%M")
+                    current_date = datetime.datetime.today()
+                    current_year = current_date.year
+                    current_month = current_date.month
+                    current_day = current_date.day
 
-                # package_deadline can now be used to compare against the package's current status
-                package_deadline = package_deadline.replace(year=current_year, month=current_month,
-                                                                  day=current_day)
-            except:
-                print('Incorrect time format!')
+                    # package_deadline can now be used to compare against the package's current status
+                    package_deadline = package_deadline.replace(year=current_year, month=current_month,
+                                                                      day=current_day)
+                except:
+                    print('Incorrect time format!')
 
             # The package file contains 40 packages. The max number of packages that can be loaded on all the trucks
             # is 48 packages. Also, if two many packages are entered, than the deadlines will be harder to meet. This
             # if statement is not ideal for scalability but more information would be needed as to how new package data
             # will be given to the system each time it is used.
-            if 40 < int(package_id) < 47 and package_hash.search(package_id) == None:
+            if 40 < int(package_id) < 47 and package_hash.search(package_id) is None:
                 # Creates a new package object given the user input.
                 new_package = Package(int(package_id), package_address, package_city, package_state, package_zip,
                                       package_deadline, package_weight, package_notes)
