@@ -8,7 +8,8 @@ import datetime
 truck_hash = ChainingHashTable(4)
 
 
-# Algorithm that sorts all the packages in the package hash into trucks so that nearest neighbor will be more efficient
+# Algorithm that sorts all the packages in the package hash into trucks so that nearest neighbor will be more
+# efficient -> O(N^2)
 def load_trucks():
     truck_one = []
     truck_two = []
@@ -254,7 +255,7 @@ def load_trucks():
     set_truck_three_time_left_hub(truck_obj1)
 
 
-# Sets the time in which truck three will leave the hub.
+# Sets the time in which truck three will leave the hub -> O(N^2)
 def set_truck_three_time_left_hub(truck_one):
     date = datetime.date.today()
 
@@ -284,7 +285,7 @@ class Truck:
         self.time = time
         self.time_left_hub = time_left_hub
 
-    # Returns correct string based on the time.
+    # Returns correct string based on the time -> O(1)
     def truck_header_at_specified_time(self, time_specified):
         if self.time <= time_specified:
             truck_string = 'Truck ' + str(self.id) + ', Time left hub: ' + str(

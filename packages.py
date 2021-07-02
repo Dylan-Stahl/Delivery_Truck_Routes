@@ -2,13 +2,15 @@ import datetime
 from hash_table_chaining import ChainingHashTable
 
 date = datetime.date.today()
-# Creates a hash table that sets the capacity to 48. This hash table is used to store all the packages.
-package_hash = ChainingHashTable(48)
+# Creates a hash table that sets the capacity to 49. This hash table is used to store all the packages.
+package_hash = ChainingHashTable(49)
 
 
 # Holds data regarding each package
 class Package:
-    def __init__(self, id, address, city, state, zip, deadline, mass, package_notes, visited = False, status='At the hub', time_delivered = datetime.datetime(date.year, date.month, date.day, 23, 59, 0),
+    def __init__(self, id, address, city, state, zip, deadline, mass, package_notes, visited = False, status='At the '
+                                                                                                             'hub',
+                 time_delivered = datetime.datetime(date.year, date.month, date.day, 23, 59, 0),
                  number_on_truck=-1):
         self.id = id
         self.address = address
