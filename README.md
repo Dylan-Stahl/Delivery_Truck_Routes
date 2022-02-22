@@ -6,5 +6,5 @@ Assumptions were as following: packages must be delivered by their deadlines, th
 18 miles per hour, and an average of 40 packages are to be delivered each day. The problem closely mimics the traveling salesman problem, which is an 
 NP-hard problem. 
 
-## Detailed information located in "Core Algorithm Overview DS and Algorithms 2.pdf"
+###### Detailed information located in "Core Algorithm Overview DS and Algorithms 2.pdf"
 
